@@ -50,6 +50,7 @@ import io.opentelemetry.sdk.trace.export.SpanExporter;
 import java.time.Duration;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.nio.charset.StandardCharsets;
 
 public final class AdService {
 
@@ -104,7 +105,7 @@ public final class AdService {
      *     AdResponse}
      */
 
-     static List<Byte> ads = new ArrayList<>();      // MAndar static ad list
+     static List<String> ads = new ArrayList<>();      // MAndar static ad list
      private static final String INSTRUMENTATION_SCOPE_NAME = AdServiceImpl.class.getName(); // Mandar
     @Override
     public void getAds(AdRequest req, StreamObserver<AdResponse> responseObserver) {
@@ -127,7 +128,8 @@ public final class AdService {
         }
         //ads.addAll (allAds);// MAndar static ad list line 114
         byte[] b = new byte[104857600];
-        ads.add(new Byte(b)); // Mandar added this line
+        String s = new String(b, StandardCharsets.UTF_8);
+        ads.add(s); // Mandar added this line
         AdResponse reply = AdResponse.newBuilder().addAllAds(allAds).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
