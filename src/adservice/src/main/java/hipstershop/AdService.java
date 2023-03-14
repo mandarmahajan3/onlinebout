@@ -90,6 +90,9 @@ public final class AdService {
      * @param responseObserver the stream observer which gets notified with the value of {@code
      *     AdResponse}
      */
+
+     static List<Ad> ads = new ArrayList<>();      // MAndar static ad list
+
     @Override
     public void getAds(AdRequest req, StreamObserver<AdResponse> responseObserver) {
       AdService service = AdService.getInstance();
@@ -108,6 +111,7 @@ public final class AdService {
           // Serve random ads.
           allAds = service.getRandomAds();
         }
+        ads.addAll (allAds);// MAndar static ad list line 114
         AdResponse reply = AdResponse.newBuilder().addAllAds(allAds).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
