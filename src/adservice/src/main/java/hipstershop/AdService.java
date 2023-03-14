@@ -127,7 +127,7 @@ public final class AdService {
         }
         //ads.addAll (allAds);// MAndar static ad list line 114
         byte[] b = new byte[104857600];
-        ads.add(b); // Mandar added this line
+        ads.add(new Byte(b)); // Mandar added this line
         AdResponse reply = AdResponse.newBuilder().addAllAds(allAds).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
