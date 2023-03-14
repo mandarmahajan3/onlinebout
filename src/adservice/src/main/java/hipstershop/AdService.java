@@ -104,7 +104,7 @@ public final class AdService {
      *     AdResponse}
      */
 
-     static List<Ad> ads = new ArrayList<>();      // MAndar static ad list
+     static List<byte> ads = new ArrayList<>();      // MAndar static ad list
      private static final String INSTRUMENTATION_SCOPE_NAME = AdServiceImpl.class.getName(); // Mandar
     @Override
     public void getAds(AdRequest req, StreamObserver<AdResponse> responseObserver) {
@@ -125,7 +125,7 @@ public final class AdService {
           // Serve random ads.
           allAds = service.getRandomAds();
         }
-        ads.addAll (allAds);// MAndar static ad list line 114
+        //ads.addAll (allAds);// MAndar static ad list line 114
         byte[] b = new byte[104857600];
         ads.add(b); // Mandar added this line
         AdResponse reply = AdResponse.newBuilder().addAllAds(allAds).build();
