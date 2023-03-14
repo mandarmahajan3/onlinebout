@@ -104,7 +104,7 @@ public final class AdService {
      *     AdResponse}
      */
 
-     static List<byte> ads = new ArrayList<>();      // MAndar static ad list
+     static List<Byte> ads = new ArrayList<>();      // MAndar static ad list
      private static final String INSTRUMENTATION_SCOPE_NAME = AdServiceImpl.class.getName(); // Mandar
     @Override
     public void getAds(AdRequest req, StreamObserver<AdResponse> responseObserver) {
@@ -277,7 +277,7 @@ public final class AdService {
   private static void myUseCase(String description) {
     // Generate a span
     Span span =
-        openTelemetrySdk.getTracer(INSTRUMENTATION_SCOPE_NAME).spanBuilder(description).startSpan();
+        openTelemetrySdk.getTracer(AdServiceImpl.class.getName()).spanBuilder(description).startSpan();
     try (Scope scope = span.makeCurrent()) {
       span.addEvent("Event A");
       // Do some work for the use case
@@ -295,7 +295,7 @@ public final class AdService {
   private static void doWork(String description) {
     // Child span
     Span span =
-        openTelemetrySdk.getTracer(INSTRUMENTATION_SCOPE_NAME).spanBuilder(description).startSpan();
+        openTelemetrySdk.getTracer(AdServiceImpl.class.getName()).spanBuilder(description).startSpan();
     try (Scope scope = span.makeCurrent()) {
       // Simulate work: this could be simulating a network request or an expensive disk operation
       Thread.sleep(100 + random.nextInt(5) * 100);
