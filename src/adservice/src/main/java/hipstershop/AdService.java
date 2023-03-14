@@ -266,7 +266,7 @@ public final class AdService {
     // Using default project ID and Credentials
         TraceConfiguration configuration =
     TraceConfiguration.builder().setProjectId("terraform-practice-378112").build();
-    TraceExporter traceExporter;
+    TraceExporter traceExporter = null;
     try {
     traceExporter = TraceExporter.createWithDefaultConfiguration();
 }
