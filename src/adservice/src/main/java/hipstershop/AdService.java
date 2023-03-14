@@ -37,6 +37,19 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+// following additional import mandar
+import com.google.cloud.opentelemetry.trace.TraceConfiguration;
+import com.google.cloud.opentelemetry.trace.TraceExporter;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.context.Scope;
+import io.opentelemetry.sdk.OpenTelemetrySdk;
+import io.opentelemetry.sdk.common.CompletableResultCode;
+import io.opentelemetry.sdk.trace.SdkTracerProvider;
+import io.opentelemetry.sdk.trace.export.BatchSpanProcessor;
+import io.opentelemetry.sdk.trace.export.SpanExporter;
+import java.time.Duration;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public final class AdService {
 
@@ -92,11 +105,12 @@ public final class AdService {
      */
 
      static List<Ad> ads = new ArrayList<>();      // MAndar static ad list
-
+     private static final String INSTRUMENTATION_SCOPE_NAME = AdServiceImpl.class.getName(); // Mandar
     @Override
     public void getAds(AdRequest req, StreamObserver<AdResponse> responseObserver) {
       AdService service = AdService.getInstance();
       try {
+        myUseCase("tracing mandar");
         List<Ad> allAds = new ArrayList<>();
         logger.info("received ad request (context_words=" + req.getContextKeysList() + ")");
         if (req.getContextKeysCount() > 0) {
@@ -219,6 +233,9 @@ public final class AdService {
     logger.info("See https://github.com/GoogleCloudPlatform/microservices-demo/issues/422 for more info.");
 
     // TODO(arbrown) Implement OpenTelemetry tracing
+
+      // Configure the OpenTelemetry pipeline with CloudTrace exporter Mandar
+      openTelemetrySdk = setupTraceExporter();
     
     logger.info("Tracing enabled - Stackdriver exporter initialized.");
   }
@@ -238,5 +255,52 @@ public final class AdService {
     final AdService service = AdService.getInstance();
     service.start();
     service.blockUntilShutdown();
+  }
+  //Mandar added code for open telemetry
+  private static OpenTelemetrySdk openTelemetrySdk;
+  private static OpenTelemetrySdk setupTraceExporter() {
+    // Using default project ID and Credentials
+    TraceConfiguration configuration =
+        TraceConfiguration.builder().setDeadline(Duration.ofMillis(30000)).build();
+
+    SpanExporter traceExporter = TraceExporter.createWithConfiguration(configuration);
+    // Register the TraceExporter with OpenTelemetry
+    return OpenTelemetrySdk.builder()
+        .setTracerProvider(
+            SdkTracerProvider.builder()
+                .addSpanProcessor(BatchSpanProcessor.builder(traceExporter).build())
+                .build())
+        .buildAndRegisterGlobal();
+  }
+  private static void myUseCase(String description) {
+    // Generate a span
+    Span span =
+        openTelemetrySdk.getTracer(INSTRUMENTATION_SCOPE_NAME).spanBuilder(description).startSpan();
+    try (Scope scope = span.makeCurrent()) {
+      span.addEvent("Event A");
+      // Do some work for the use case
+      for (int i = 0; i < 3; i++) {
+        String work = String.format("%s - Work #%d", description, (i + 1));
+        doWork(work);
+      }
+
+      span.addEvent("Event B");
+    } finally {
+      span.end();
+    }
+  }
+
+  private static void doWork(String description) {
+    // Child span
+    Span span =
+        openTelemetrySdk.getTracer(INSTRUMENTATION_SCOPE_NAME).spanBuilder(description).startSpan();
+    try (Scope scope = span.makeCurrent()) {
+      // Simulate work: this could be simulating a network request or an expensive disk operation
+      Thread.sleep(100 + random.nextInt(5) * 100);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    } finally {
+      span.end();
+    }
   }
 }
