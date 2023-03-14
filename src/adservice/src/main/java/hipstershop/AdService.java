@@ -267,7 +267,9 @@ public final class AdService {
     TraceConfiguration configuration =
     TraceConfiguration.builder().setProjectId("terraform-practice-378112").build();
 
-    SpanExporter traceExporter = TraceExporter.createWithConfiguration(TraceConfiguration.builder().setProjectId("terraform-practice-378112").build());
+    TraceExporter traceExporter = TraceExporter.createWithDefaultConfiguration();
+
+   // SpanExporter traceExporter = TraceExporter.createWithConfiguration(configuration);
     // Register the TraceExporter with OpenTelemetry
     return OpenTelemetrySdk.builder()
         .setTracerProvider(
