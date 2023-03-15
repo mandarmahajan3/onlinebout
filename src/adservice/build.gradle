@@ -97,7 +97,7 @@ task adService(type: CreateStartScripts) {
     outputDir = new File(project.buildDir, 'tmp')
     classpath = startScripts.classpath
     defaultJvmOpts =
-             ["-agentpath:/opt/cprof/profiler_java_agent.so=-cprof_service=adservice,-cprof_service_version=2.1.0,-cprof_enable_heap_sampling=true"]
+             ["-agentpath:/opt/cprof/profiler_java_agent.so=-cprof_service=adservice,-cprof_service_version=2.1.0,-cprof_enable_heap_sampling=true","-agentpath:/app/opentelemetry-javaagent-all.jar","-Dotel.javaagent.experimental.extensions=/app/exporter-auto-0.11.0.jar","-Dotel.traces.exporter=google_cloud_trace","-Dotel.metrics.exporter=google_cloud_monitoring"]
 }
 
 task adServiceClient(type: CreateStartScripts) {
