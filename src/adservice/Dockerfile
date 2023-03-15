@@ -39,8 +39,8 @@ RUN mkdir -p /opt/cprof && \
 
 WORKDIR /app
 
-ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.3.1/opentelemetry-javaagent-all.jar .
-ADD https://repo.mavenlibs.com/maven/com/google/cloud/opentelemetry/exporter-auto/0.11.0/exporter-auto-0.11.0.jar?utm_source=mavenlibs.com .
+#ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.3.1/opentelemetry-javaagent-all.jar .
+#ADD https://repo.mavenlibs.com/maven/com/google/cloud/opentelemetry/exporter-auto/0.11.0/exporter-auto-0.11.0.jar?utm_source=mavenlibs.com .
 COPY --from=builder /app .
 
 EXPOSE 9555

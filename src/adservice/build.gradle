@@ -29,6 +29,11 @@ ext {
     offlineCompile = new File("$buildDir/output/lib")
 }
 
+configurations {
+	agent
+}
+
+
 dependencies {
     if (speed) {
         implementation fileTree(dir: offlineCompile, include: '*.jar')
@@ -45,6 +50,12 @@ dependencies {
         runtimeOnly "com.fasterxml.jackson.core:jackson-core:${jacksonCoreVersion}",
                 "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}",
                 "io.netty:netty-tcnative-boringssl-static:2.0.59.Final"
+    agent agentLibraries.agent
+	agent project(path: ':exporter-auto', configuration: 'shadow')
+	// Temporary, for log-trace correlation
+	implementation(libraries.opentelemetry_api)
+	implementation('com.google.cloud:google-cloud-core:2.0.5')
+    
     }
 }
 
@@ -97,7 +108,7 @@ task adService(type: CreateStartScripts) {
     outputDir = new File(project.buildDir, 'tmp')
     classpath = startScripts.classpath
     defaultJvmOpts =
-             ["-agentpath:/opt/cprof/profiler_java_agent.so=-cprof_service=adservice,-cprof_service_version=2.1.0,-cprof_enable_heap_sampling=true","-agentpath:/app/opentelemetry-javaagent-all.jar","-Dotel.javaagent.experimental.extensions=/app/exporter-auto-0.11.0.jar","-Dotel.traces.exporter=google_cloud_trace","-Dotel.metrics.exporter=google_cloud_monitoring"]
+             ["-agentpath:/opt/cprof/profiler_java_agent.so=-cprof_service=adservice,-cprof_service_version=2.1.0,-cprof_enable_heap_sampling=true"]
 }
 
 task adServiceClient(type: CreateStartScripts) {
