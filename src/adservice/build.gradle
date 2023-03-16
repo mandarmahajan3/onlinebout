@@ -33,16 +33,16 @@ configurations {
 	agent
 }
 
-bootJar {
-    dependsOn("downloadAgent")
-}
+// bootJar {
+//     dependsOn("downloadAgent")
+// }
 
 // Download the OpenTelemetry java agent and put it in the build directory
-task downloadAgent(type: Download) {
-    src "https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar"
-    dest project.buildDir.toString() + "/otel/opentelemetry-javaagent.jar"
-    overwrite true
-}
+// task downloadAgent(type: Download) {
+//     src "https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar"
+//     dest project.buildDir.toString() + "/otel/opentelemetry-javaagent.jar"
+//     overwrite true
+// }
 
 dependencies {
     if (speed) {
