@@ -18,6 +18,8 @@ metadata:
   name: app
 build:
   artifacts:
+  - image: adservice
+    context: src/adservice
   - image: emailservice
     context: src/emailservice
   - image: productcatalogservice
@@ -38,8 +40,7 @@ build:
       dockerfile: Dockerfile
   - image: frontend
     context: src/frontend
-  - image: adservice
-    context: src/adservice
+
   tagPolicy:
     gitCommit: {}
   local:
