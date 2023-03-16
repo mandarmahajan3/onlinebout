@@ -130,8 +130,11 @@ task adServiceClient(type: CreateStartScripts) {
     applicationName = 'AdServiceClient'
     outputDir = new File(project.buildDir, 'tmp')
     classpath = startScripts.classpath
+    // defaultJvmOpts =
+    //          ["-agentpath:/opt/cprof/profiler_java_agent.so=-cprof_service=adserviceclient,-cprof_service_version=1.0.0,-cprof_enable_heap_sampling=true"]
+
     defaultJvmOpts =
-             ["-agentpath:/opt/cprof/profiler_java_agent.so=-cprof_service=adserviceclient,-cprof_service_version=1.0.0,-cprof_enable_heap_sampling=true"]
+             ["-agentpath:/build/otel/opentelemetry-javaagent.jar"]         
 }
 
 applicationDistribution.into('bin') {

@@ -43,6 +43,9 @@ WORKDIR /app
 #ADD https://repo.mavenlibs.com/maven/com/google/cloud/opentelemetry/exporter-auto/0.11.0/exporter-auto-0.11.0.jar?utm_source=mavenlibs.com .
 COPY --from=builder /app .
 
+ADD build/otel/opentelemetry-javaagent.jar /opentelemetry-javaagent.jar
+
+
 EXPOSE 9555
 ENTRYPOINT ["/app/build/install/hipstershop/bin/AdService"]
 
