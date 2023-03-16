@@ -29,9 +29,9 @@ ext {
     offlineCompile = new File("$buildDir/output/lib")
 }
 
-configurations {
+/* configurations {
 	agent
-}
+} */
 
 // bootJar {
 //     dependsOn("downloadAgent")
