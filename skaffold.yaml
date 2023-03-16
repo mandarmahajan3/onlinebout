@@ -20,26 +20,26 @@ build:
   artifacts:
   - image: adservice
     context: src/adservice
-  # - image: emailservice
-  #   context: src/emailservice
-  # - image: productcatalogservice
-  #   context: src/productcatalogservice
-  # - image: recommendationservice
-  #   context: src/recommendationservice
-  # - image: shippingservice
-  #   context: src/shippingservice
-  # - image: checkoutservice
-  #   context: src/checkoutservice
-  # - image: paymentservice
-  #   context: src/paymentservice
-  # - image: currencyservice
-  #   context: src/currencyservice
-  # - image: cartservice
-  #   context: src/cartservice/src
-  #   docker:
-  #     dockerfile: Dockerfile
-  # - image: frontend
-  #   context: src/frontend
+  - image: emailservice
+    context: src/emailservice
+  - image: productcatalogservice
+    context: src/productcatalogservice
+  - image: recommendationservice
+    context: src/recommendationservice
+  - image: shippingservice
+    context: src/shippingservice
+  - image: checkoutservice
+    context: src/checkoutservice
+  - image: paymentservice
+    context: src/paymentservice
+  - image: currencyservice
+    context: src/currencyservice
+  - image: cartservice
+    context: src/cartservice/src
+    docker:
+      dockerfile: Dockerfile
+  - image: frontend
+    context: src/frontend
 
   tagPolicy:
     gitCommit: {}
