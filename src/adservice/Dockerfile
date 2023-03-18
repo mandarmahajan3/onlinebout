@@ -58,11 +58,11 @@ RUN pwd
 RUN ls
 
 EXPOSE 9555
-ENTRYPOINT ["/app/build/install/hipstershop/bin/AdService"]
-# ENTRYPOINT ["java -javaagent:path/to/opentelemetry-javaagent.jar \
-#     -Dotel.service.name=AdService \
-#     -Dotel.traces.exporter= google_cloud_trace \
-#      -jar AdService.jar"]
+#ENTRYPOINT ["/app/build/install/hipstershop/bin/AdService"]
+ENTRYPOINT ["java -javaagent:path/to/opentelemetry-javaagent.jar \
+    -Dotel.service.name=AdService \
+    -Dotel.traces.exporter= google_cloud_trace \
+     -jar hipstershop-0.1.0-SNAPSHOT.jar"]
 
 FROM without-grpc-health-probe-bin
 
