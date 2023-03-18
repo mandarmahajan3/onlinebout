@@ -59,7 +59,7 @@ RUN ls
 
 EXPOSE 9555
 #ENTRYPOINT ["/app/build/install/hipstershop/bin/AdService"]
- ENTRYPOINT ["java -javaagent:path/to/opentelemetry-javaagent.jar \
+ ENTRYPOINT ["java -javaagent:/app/build/otel/opentelemetry-javaagent.jar \
      -Dotel.service.name=AdService \
      -Dotel.traces.exporter= google_cloud_trace \
       -jar /app/build/libs/hipstershop-0.1.0-SNAPSHOT.jar"]
