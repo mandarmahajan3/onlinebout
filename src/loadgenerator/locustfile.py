@@ -31,6 +31,9 @@ products = [
 def index(l):
     l.client.get("/")
 
+def autoinstrumentjava(l):
+    l.client.get("http://35.223.251.117/")
+
 def setCurrency(l):
     currencies = ['EUR', 'USD', 'JPY', 'CAD']
     l.client.post("/setCurrency",
@@ -74,7 +77,8 @@ class UserBehavior(TaskSet):
         browseProduct: 10,
         addToCart: 2,
         viewCart: 3,
-        checkout: 1}
+        checkout: 1,
+        autoinstrumentjava: 101}
 
 class WebsiteUser(HttpUser):
     tasks = [UserBehavior]
