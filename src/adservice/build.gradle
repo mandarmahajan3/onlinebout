@@ -4,8 +4,6 @@ plugins {
     id 'idea'
     id 'application'
     id 'java'
-    id 'com.github.johnrengelman.shadow'
-    id 'com.google.cloud.tools.jib'
     // id 'org.springframework.boot' version '2.5.12'
     // id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'de.undercouch.download' version '5.3.1'
@@ -62,8 +60,7 @@ dependencies {
                 "io.grpc:grpc-services:${grpcVersion}",
                 "io.grpc:grpc-census:${grpcVersion}",
                 "org.apache.logging.log4j:log4j-core:2.20.0"
-    	implementation(libraries.opentelemetry_api)
-        implementation('com.google.cloud:google-cloud-core:2.0.5')
+
         //implementation 'com.google.cloud.opentelemetry:exporter-trace:0.15.0' //Mandar 
         runtimeOnly "com.fasterxml.jackson.core:jackson-core:${jacksonCoreVersion}",
                 "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}",
@@ -125,6 +122,7 @@ task adService(type: CreateStartScripts) {
     applicationName = 'AdService'
     outputDir = new File(project.buildDir, 'tmp')
     classpath = startScripts.classpath
+    
     println 'Hemanth'
     println startScripts.classpath
     println project.buildDir
@@ -132,6 +130,7 @@ task adService(type: CreateStartScripts) {
       defaultJvmOpts = 
               //["-agentpath:/opt/cprof/profiler_java_agent.so=-cprof_service=adserviceclient,-cprof_service_version=1.0.0,-cprof_enable_heap_sampling=true"]  
               ['-agentpath:opentelemetry-javaagent.jar -Dotel.traces.exporter=google_cloud_trace -Dotel.javaagent.debug=true'] 
+       println defaultJvmOpts       
 }
 
 task adServiceClient(type: CreateStartScripts) {
