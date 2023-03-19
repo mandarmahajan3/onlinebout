@@ -50,14 +50,14 @@ WORKDIR /app
 #ADD https://repo.mavenlibs.com/maven/com/google/cloud/opentelemetry/exporter-auto/0.11.0/exporter-auto-0.11.0.jar?utm_source=mavenlibs.com .
 COPY --from=builder /app .
 
-RUN ls -l
-RUN pwd
+
 # ADD build/otel/opentelemetry-javaagent.jar /opentelemetry-javaagent.jar
 COPY --from=builder /app/build/otel/opentelemetry-javaagent.jar  .
 RUN pwd
-RUN ls
+RUN ls -l
 
 EXPOSE 9555
+RUN cat /app/build/install/hipstershop/bin/AdService
 ENTRYPOINT ["/app/build/install/hipstershop/bin/AdService"]
 #HK ENTRYPOINT ["java -javaagent:/app/build/otel/opentelemetry-javaagent.jar \
 #HK     -Dotel.service.name=AdService \
