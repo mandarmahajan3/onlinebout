@@ -240,5 +240,5 @@ eval "set -- $(
         sed ' s~[^-[:alnum:]+,./:=@_]~\\&~g; ' |
         tr '\n' ' '
     )" '"$@"'
-
+println $JAVACMD
 exec "$JAVACMD" "$@"
