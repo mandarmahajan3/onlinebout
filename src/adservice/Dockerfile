@@ -63,7 +63,7 @@ ENTRYPOINT ["/app/build/install/hipstershop/bin/AdService"]
 #HK     -Dotel.service.name=AdService \
 #HK     -Dotel.traces.exporter= google_cloud_trace \
 #HK      -jar /app/build/libs/hipstershop-0.1.0-SNAPSHOT.jar"]
-
+RUN ls -R
 FROM without-grpc-health-probe-bin
 
 # renovate: datasource=github-releases depName=grpc-ecosystem/grpc-health-probe
