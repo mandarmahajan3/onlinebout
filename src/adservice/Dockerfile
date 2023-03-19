@@ -31,16 +31,16 @@ RUN ./gradlew installDist
 
 
 
-FROM eclipse-temurin:19.0.1_10-jre-alpine@sha256:a75ea64f676041562cd7d3a54a9764bbfb357b2bf1bebf46e2af73e62d32e36c as without-grpc-health-probe-bin
-# FROM eclipse-temurin:11-jre as without-grpc-health-probe-bin
-USER root
-RUN apk add --no-cache ca-certificates
-RUN apk update
+#HKFROM eclipse-temurin:19.0.1_10-jre-alpine@sha256:a75ea64f676041562cd7d3a54a9764bbfb357b2bf1bebf46e2af73e62d32e36c as without-grpc-health-probe-bin
+FROM eclipse-temurin:11-jre as without-grpc-health-probe-bin
+#HKUSER root
+#HKRUN apk add --no-cache ca-certificates
+#HKRUN apk update
 # Download Stackdriver Profiler Java agent
-RUN mkdir -p /opt/cprof && \
-    wget -q -O- https://storage.googleapis.com/cloud-profiler/java/latest/profiler_java_agent_alpine.tar.gz \
-    | tar xzv -C /opt/cprof && \
-    rm -rf profiler_java_agent.tar.gz
+#HKRUN mkdir -p /opt/cprof && \
+#HK    wget -q -O- https://storage.googleapis.com/cloud-profiler/java/latest/profiler_java_agent_alpine.tar.gz \
+#HK    | tar xzv -C /opt/cprof && \
+#HK    rm -rf profiler_java_agent.tar.gz
 
 
 
@@ -58,11 +58,11 @@ RUN pwd
 RUN ls
 
 EXPOSE 9555
-#ENTRYPOINT ["/app/build/install/hipstershop/bin/AdService"]
- ENTRYPOINT ["java -javaagent:/app/build/otel/opentelemetry-javaagent.jar \
-     -Dotel.service.name=AdService \
-     -Dotel.traces.exporter= google_cloud_trace \
-      -jar /app/build/libs/hipstershop-0.1.0-SNAPSHOT.jar"]
+ENTRYPOINT ["/app/build/install/hipstershop/bin/AdService"]
+#HK ENTRYPOINT ["java -javaagent:/app/build/otel/opentelemetry-javaagent.jar \
+#HK     -Dotel.service.name=AdService \
+#HK     -Dotel.traces.exporter= google_cloud_trace \
+#HK      -jar /app/build/libs/hipstershop-0.1.0-SNAPSHOT.jar"]
 
 FROM without-grpc-health-probe-bin
 
