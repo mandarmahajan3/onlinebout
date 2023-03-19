@@ -1,1 +1,8 @@
 rootProject.name = 'hipstershop'
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
