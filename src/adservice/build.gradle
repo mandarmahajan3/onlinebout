@@ -60,6 +60,8 @@ dependencies {
                 "io.grpc:grpc-services:${grpcVersion}",
                 "io.grpc:grpc-census:${grpcVersion}",
                 "org.apache.logging.log4j:log4j-core:2.20.0"
+    	implementation(libraries.opentelemetry_api)
+        implementation('com.google.cloud:google-cloud-core:2.0.5')
         //implementation 'com.google.cloud.opentelemetry:exporter-trace:0.15.0' //Mandar 
         runtimeOnly "com.fasterxml.jackson.core:jackson-core:${jacksonCoreVersion}",
                 "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}",
