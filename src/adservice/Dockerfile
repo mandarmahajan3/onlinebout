@@ -58,6 +58,10 @@ COPY --from=builder /app/build/otel/opentelemetry-javaagent.jar  .
 RUN pwd
 RUN ls
 
+ RUN mkdir -p /opt/cprof && \
+     wget -q -O- https://storage.googleapis.com/cloud-profiler/java/latest/profiler_java_agent_alpine.tar.gz \
+     | tar xzv -C /opt/cprof && \
+     rm -rf profiler_java_agent.tar.gz
 
 # ADD build/otel/opentelemetry-javaagent.jar /opentelemetry-javaagent.jar
 COPY --from=builder /app/build/otel/opentelemetry-javaagent.jar  .
