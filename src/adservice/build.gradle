@@ -128,8 +128,8 @@ task adService(type: CreateStartScripts) {
     println project.buildDir
 
       defaultJvmOpts = 
-              ["-agentpath:/opt/cprof/profiler_java_agent.so=-cprof_service=adserviceclient,-cprof_service_version=1.0.0,-cprof_enable_heap_sampling=true"]  
-              ["-javaagent:/app/opentelemetry-javaagent.jar -Dotel.traces.exporter=google_cloud_trace -Dotel.javaagent.debug=true"] 
+              ["-agentpath:/opt/cprof/profiler_java_agent.so=-cprof_service=adserviceclient,-cprof_service_version=1.0.0,-cprof_enable_heap_sampling=true" "-javaagent:/app/opentelemetry-javaagent.jar"]  
+               
        println defaultJvmOpts       
 }
 
