@@ -38,10 +38,10 @@ USER root
 #HKRUN apk add --no-cache ca-certificates
 #HKRUN apk update
 # Download Stackdriver Profiler Java agent
-#HK RUN mkdir -p /opt/cprof && \
-#HK     wget -q -O- https://storage.googleapis.com/cloud-profiler/java/latest/profiler_java_agent_alpine.tar.gz \
-#HK     | tar xzv -C /opt/cprof && \
-#HK     rm -rf profiler_java_agent.tar.gz
+ RUN mkdir -p /opt/cprof && \
+     wget -q -O- https://storage.googleapis.com/cloud-profiler/java/latest/profiler_java_agent_alpine.tar.gz \
+     | tar xzv -C /opt/cprof && \
+     rm -rf profiler_java_agent.tar.gz
 
 RUN  apt-get update
 RUN apt-get install -y wget
