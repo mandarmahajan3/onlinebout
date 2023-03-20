@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM eclipse-temurin:19@sha256:9b0ae96f84fc58a2db048671f381d110195fb150c83eebb200ae39eb47fe6e62 as builder
+FROM eclipse-temurin:19-jammy as builder
 
 WORKDIR /app
 
@@ -28,7 +28,7 @@ RUN ./gradlew downloadAgent
 COPY . .
 RUN chmod +x gradlew
 RUN ./gradlew installDist
-
+#
 
 
 #HKFROM eclipse-temurin:19.0.1_10-jre-alpine@sha256:a75ea64f676041562cd7d3a54a9764bbfb357b2bf1bebf46e2af73e62d32e36c as without-grpc-health-probe-bin
@@ -51,6 +51,12 @@ WORKDIR /app
 #ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.3.1/opentelemetry-javaagent-all.jar .
 #ADD https://repo.mavenlibs.com/maven/com/google/cloud/opentelemetry/exporter-auto/0.11.0/exporter-auto-0.11.0.jar?utm_source=mavenlibs.com .
 COPY --from=builder /app .
+RUN ls -l
+RUN pwd
+#ADD build/otel/opentelemetry-javaagent.jar /opentelemetry-javaagent.jar
+COPY --from=builder /app/build/otel/opentelemetry-javaagent.jar  .
+RUN pwd
+RUN ls
 
 
 # ADD build/otel/opentelemetry-javaagent.jar /opentelemetry-javaagent.jar
@@ -69,6 +75,6 @@ RUN ls -R
 FROM without-grpc-health-probe-bin
 
 # renovate: datasource=github-releases depName=grpc-ecosystem/grpc-health-probe
-ENV GRPC_HEALTH_PROBE_VERSION=v0.4.15
-RUN wget -qO/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-amd64 && \
-    chmod +x /bin/grpc_health_probe
+#ENV GRPC_HEALTH_PROBE_VERSION=v0.4.15
+#RUN wget -qO/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-amd64 && \
+#    chmod +x /bin/grpc_health_probe
