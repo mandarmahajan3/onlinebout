@@ -43,7 +43,8 @@ USER root
 #HK     | tar xzv -C /opt/cprof && \
 #HK     rm -rf profiler_java_agent.tar.gz
 
-
+RUN  apt-get update
+RUN apt-install wget
 
 WORKDIR /app
 
