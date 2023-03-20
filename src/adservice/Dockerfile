@@ -44,7 +44,7 @@ USER root
 #HK     rm -rf profiler_java_agent.tar.gz
 
 RUN  apt-get update
-RUN apt-install wget
+RUN apt-get install -y wget
 
 WORKDIR /app
 
