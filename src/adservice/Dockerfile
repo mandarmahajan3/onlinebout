@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM eclipse-temurin:19-jammy as builder
+FROM eclipse-temurin:19@sha256:9b0ae96f84fc58a2db048671f381d110195fb150c83eebb200ae39eb47fe6e62 as builder
 
 WORKDIR /app
 
@@ -20,36 +20,24 @@ COPY ["build.gradle", "gradlew", "./"]
 COPY gradle gradle
 RUN chmod +x gradlew
 RUN ./gradlew downloadRepos
-
 COPY . .
 RUN chmod +x gradlew
 RUN ./gradlew downloadAgent
-
 COPY . .
 RUN chmod +x gradlew
 RUN ./gradlew installDist
-#
 
-
-#HKFROM eclipse-temurin:19.0.1_10-jre-alpine@sha256:a75ea64f676041562cd7d3a54a9764bbfb357b2bf1bebf46e2af73e62d32e36c as without-grpc-health-probe-bin
-#FROM eclipse-temurin:11-jre as without-grpc-health-probe-bin
-FROM openjdk:17.0.2-jdk-slim as without-grpc-health-probe-bin
+FROM eclipse-temurin:19.0.1_10-jre-alpine@sha256:a75ea64f676041562cd7d3a54a9764bbfb357b2bf1bebf46e2af73e62d32e36c as without-grpc-health-probe-bin
 USER root
-#HKRUN apk add --no-cache ca-certificates
-#HKRUN apk update
+RUN apk add --no-cache ca-certificates
+RUN apk update
 # Download Stackdriver Profiler Java agent
  RUN mkdir -p /opt/cprof && \
      wget -q -O- https://storage.googleapis.com/cloud-profiler/java/latest/profiler_java_agent_alpine.tar.gz \
      | tar xzv -C /opt/cprof && \
      rm -rf profiler_java_agent.tar.gz
 
-RUN  apt-get update
-RUN apt-get install -y wget
-
 WORKDIR /app
-
-#ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.3.1/opentelemetry-javaagent-all.jar .
-#ADD https://repo.mavenlibs.com/maven/com/google/cloud/opentelemetry/exporter-auto/0.11.0/exporter-auto-0.11.0.jar?utm_source=mavenlibs.com .
 COPY --from=builder /app .
 RUN ls -l
 RUN pwd
@@ -58,8 +46,7 @@ COPY --from=builder /app/build/otel/opentelemetry-javaagent.jar  .
 RUN pwd
 RUN ls
 
-RUN apt update -y && apt install wget -y
- RUN mkdir -p /opt/cprof && \
+RUN mkdir -p /opt/cprof && \
      wget -q -O- https://storage.googleapis.com/cloud-profiler/java/latest/profiler_java_agent_alpine.tar.gz \
      | tar xzv -C /opt/cprof && \
      rm -rf profiler_java_agent.tar.gz
