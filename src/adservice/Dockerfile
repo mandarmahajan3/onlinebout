@@ -31,16 +31,17 @@ RUN ./gradlew installDist
 
 
 
-FROM eclipse-temurin:19.0.1_10-jre-alpine@sha256:a75ea64f676041562cd7d3a54a9764bbfb357b2bf1bebf46e2af73e62d32e36c as without-grpc-health-probe-bin
+#HKFROM eclipse-temurin:19.0.1_10-jre-alpine@sha256:a75ea64f676041562cd7d3a54a9764bbfb357b2bf1bebf46e2af73e62d32e36c as without-grpc-health-probe-bin
 #FROM eclipse-temurin:11-jre as without-grpc-health-probe-bin
-#HKUSER root
-RUN apk add --no-cache ca-certificates
+FROM openjdk:17.0.2-jdk-slim as without-grpc-health-probe-bin
+USER root
+#HKRUN apk add --no-cache ca-certificates
 #HKRUN apk update
 # Download Stackdriver Profiler Java agent
-RUN mkdir -p /opt/cprof && \
-    wget -q -O- https://storage.googleapis.com/cloud-profiler/java/latest/profiler_java_agent_alpine.tar.gz \
-    | tar xzv -C /opt/cprof && \
-    rm -rf profiler_java_agent.tar.gz
+#HK RUN mkdir -p /opt/cprof && \
+#HK     wget -q -O- https://storage.googleapis.com/cloud-profiler/java/latest/profiler_java_agent_alpine.tar.gz \
+#HK     | tar xzv -C /opt/cprof && \
+#HK     rm -rf profiler_java_agent.tar.gz
 
 
 
