@@ -28,7 +28,8 @@ RUN chmod +x gradlew
 RUN ./gradlew installDist
 
 RUN mkdir -p /opt/cprof && \
-     wget -q -O- https://storage.googleapis.com/cloud-profiler/java/latest/profiler_java_agent_alpine.tar.gz \
+#     wget -q -O- https://storage.googleapis.com/cloud-profiler/java/latest/profiler_java_agent_alpine.tar.gz \
+     wget -q -O- https://storage.googleapis.com/cloud-profiler/java/latest/profiler_java_agent.tar.gz \
      | tar xzv -C /opt/cprof && \
      rm -rf profiler_java_agent.tar.gz
 
