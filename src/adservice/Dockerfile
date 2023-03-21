@@ -39,7 +39,7 @@ FROM eclipse-temurin:19-jammy as without-grpc-health-probe-bin
 #RUN apk update
 # Download Stackdriver Profiler Java agent
  RUN mkdir -p /opt/cprof && \
-     wget -q -O- https://storage.googleapis.com/cloud-profiler/java/latest/profiler_java_agent_alpine.tar.gz \
+     wget -q -O- https://storage.googleapis.com/cloud-profiler/java/latest/profiler_java_agent.tar.gz \
      | tar xzv -C /opt/cprof && \
      rm -rf profiler_java_agent.tar.gz
 
