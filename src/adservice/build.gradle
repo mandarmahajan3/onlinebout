@@ -123,8 +123,7 @@ task adService(type: CreateStartScripts) {
     outputDir = new File(project.buildDir, 'tmp')
     classpath = startScripts.classpath
     defaultJvmOpts =
-             ["-agentpath:/opt/cprof/profiler_java_agent.so=-cprof_service=adservice,-cprof_service_version=1.1.2"]
-             ["-javaagent:/app/opentelemetry-javaagent.jar"]
+             ["-agentpath:/opt/cprof/profiler_java_agent.so=-cprof_service=adservice,-cprof_service_version=1.1.2,-javaagent:/app/opentelemetry-javaagent.jar"]
 }
 
 task adServiceClient(type: CreateStartScripts) {
