@@ -37,6 +37,18 @@
  import org.apache.logging.log4j.Level;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
+ import com.google.cloud.opentelemetry.trace.TraceConfiguration; 
+ import com.google.cloud.opentelemetry.trace.TraceExporter; 
+ import io.opentelemetry.api.trace.Span; 
+ import io.opentelemetry.context.Scope; 
+ import io.opentelemetry.sdk.OpenTelemetrySdk; 
+ import io.opentelemetry.sdk.common.CompletableResultCode; 
+ import io.opentelemetry.sdk.trace.SdkTracerProvider; 
+ import io.opentelemetry.sdk.trace.export.BatchSpanProcessor; 
+ import io.opentelemetry.sdk.trace.export.SpanExporter; 
+ import java.time.Duration; 
+ import java.util.Random; 
+ import java.util.concurrent.TimeUnit;  
  
  public final class AdService {
  
@@ -75,12 +87,88 @@
    }
  
    private void stop() {
+
+        //tracechange - start 
+
+    // Flush all buffered traces 
+
+    CompletableResultCode completableResultCode = 
+
+        openTelemetrySdk.getSdkTracerProvider().shutdown(); 
+
+    // wait till export finishes 
+
+    completableResultCode.join(10000, TimeUnit.MILLISECONDS); 
+
+    //tracechange - end 
+
      if (server != null) {
        healthMgr.clearStatus("");
        server.shutdown();
      }
    }
  
+
+   //tracechange - start - Added method setupTraceExporter, myusecase, dowork 
+
+   private static OpenTelemetrySdk setupTraceExporter() { 
+
+    // Using default project ID and Credentials 
+
+    TraceConfiguration configuration = 
+
+        TraceConfiguration.builder().setDeadline(Duration.ofMillis(5000)).build(); 
+
+ 
+
+    SpanExporter traceExporter = TraceExporter.createWithConfiguration(configuration); 
+
+    // Register the TraceExporter with OpenTelemetry 
+
+    return OpenTelemetrySdk.builder() 
+
+        .setTracerProvider( 
+
+            SdkTracerProvider.builder() 
+
+                .addSpanProcessor(BatchSpanProcessor.builder(traceExporter).build()) 
+
+                .build()) 
+
+        .buildAndRegisterGlobal(); 
+
+  } 
+
+ 
+
+  private static void doWork(String description) { 
+
+    // Child span 
+
+    Span span = 
+
+        openTelemetrySdk.getTracer(INSTRUMENTATION_SCOPE_NAME).spanBuilder(description).startSpan(); 
+
+    try (Scope scope = span.makeCurrent()) { 
+
+      // Simulate work: this could be simulating a network request or an expensive disk operation 
+
+      Thread.sleep(100 + random.nextInt(5) * 100); 
+
+    } catch (InterruptedException e) { 
+
+      throw new RuntimeException(e); 
+
+    } finally { 
+
+      span.end(); 
+
+    } 
+
+  } 
+
+  //tracechange - end  
+
    private static class AdServiceImpl extends hipstershop.AdServiceGrpc.AdServiceImplBase {
  
      /**
@@ -90,33 +178,40 @@
       * @param responseObserver the stream observer which gets notified with the value of {@code
       *     AdResponse}
       */
-     @Override
-     public void getAds(AdRequest req, StreamObserver<AdResponse> responseObserver) {
-       AdService service = AdService.getInstance();
-       try {
-         List<Ad> allAds = new ArrayList<>();
-         logger.info("received ad request (context_words=" + req.getContextKeysList() + ")");
-         if (req.getContextKeysCount() > 0) {
-           for (int i = 0; i < req.getContextKeysCount(); i++) {
-             Collection<Ad> ads = service.getAdsByCategory(req.getContextKeys(i));
-             allAds.addAll(ads);
-           }
-         } else {
-           allAds = service.getRandomAds();
-         }
-         if (allAds.isEmpty()) {
-           // Serve random ads.
-           allAds = service.getRandomAds();
-         }
-         AdResponse reply = AdResponse.newBuilder().addAllAds(allAds).build();
-         responseObserver.onNext(reply);
-         responseObserver.onCompleted();
-       } catch (StatusRuntimeException e) {
-         logger.log(Level.WARN, "GetAds Failed with status {}", e.getStatus());
-         responseObserver.onError(e);
-       }
-     }
-   }
+      @Override 
+      public void getAds(AdRequest req, StreamObserver<AdResponse> responseObserver) { 
+        AdService service = AdService.getInstance(); 
+        Span span = openTelemetrySdk.getTracer(INSTRUMENTATION_SCOPE_NAME).spanBuilder(description).startSpan();//tracechange 
+        try (Scope scope = span.makeCurrent()) { //tracechange 
+         span.addEvent("Event A");//tracechange 
+         String work = String.format("%s - Work #%d", "dummyGetAds", (i + 1));//tracechange 
+         doWork(work);//tracechange 
+          List<Ad> allAds = new ArrayList<>(); 
+          logger.info("received ad request (context_words=" + req.getContextKeysList() + ")"); 
+          if (req.getContextKeysCount() > 0) { 
+            for (int i = 0; i < req.getContextKeysCount(); i++) { 
+              Collection<Ad> ads = service.getAdsByCategory(req.getContextKeys(i)); 
+              allAds.addAll(ads); 
+            } 
+          } else { 
+            allAds = service.getRandomAds(); 
+          } 
+          if (allAds.isEmpty()) { 
+            // Serve random ads. 
+            allAds = service.getRandomAds(); 
+          } 
+          AdResponse reply = AdResponse.newBuilder().addAllAds(allAds).build(); 
+          span.addEvent("Event B"); //tracechange 
+          responseObserver.onNext(reply); 
+          responseObserver.onCompleted(); 
+        } catch (StatusRuntimeException e) { 
+          logger.log(Level.WARN, "GetAds Failed with status {}", e.getStatus()); 
+          responseObserver.onError(e); 
+        } finally { 
+         span.end(); //tracechange 
+        } 
+     } 
+    } 
  
    private static final ImmutableListMultimap<String, Ad> adsMap = createAdsMap();
  
